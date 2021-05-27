@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  postgres:
+    container_name: ${DB_CONTAINER_NAME}
+    image: postgres:13.2-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - ${DB_PORT}:${DB_CONTAINER_PORT}
+    networks:
+      - proshop-network
+    volumes:
+      - ${DB_DATA_DIR}:/var/lib/postgresql/data
+
+  dev:
+    container_name: ${APP_CONTAINER_DEV_NAME}
+    image: proshop-api-dev:1.0.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: npm run start:debug
+    environment:
+      DB_URL: ${DB_CONTAINER_URL}
+    ports:
+      - ${PORT}:${PORT}
+      - ${DEBUG_PORT}:${DEBUG_PORT}
+    networks:
+      - proshop-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+  # prod:
+  #   container_name: ${APP_CONTAINER_PROD_NAME}
+  #   image: proshop-api-prod:1.0.0
+  #   build:
+  #     context: .
+  #     target: production
+  #     dockerfile: ./Dockerfile
+  #   command: npm run start:prod
+  #   ports:
+  #     - ${PORT}:${PORT}
+  #   networks:
+  #     - proshop-network
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   restart: unless-stopped
+
+networks:
+  proshop-network:
