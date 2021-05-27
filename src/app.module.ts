@@ -6,9 +6,10 @@ import { AppConfigModule, DBModule } from './config';
 import { HttpExceptionFilter, TransformResponseInterceptor } from './shared';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
-  imports: [AppConfigModule, DBModule, AuthModule, UserModule],
+  imports: [AppConfigModule, DBModule, AuthModule, UserModule, ProductModule],
   controllers: [AppController],
   providers: [
     AppService,

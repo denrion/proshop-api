@@ -1,10 +1,5 @@
-import {
-  BaseCreateDTO,
-  IsValidEmail,
-  IsValidFirstName,
-  IsValidLastName,
-  IsValidPassword,
-} from '../../shared';
+import { IsNotEmpty, IsString } from 'class-validator';
+import { BaseCreateDTO, IsValidEmail, IsValidPassword } from '../../shared';
 
 export class CreateUserDTO extends BaseCreateDTO {
   @IsValidEmail()
@@ -13,9 +8,7 @@ export class CreateUserDTO extends BaseCreateDTO {
   @IsValidPassword()
   readonly password: string;
 
-  @IsValidFirstName()
-  readonly firstName?: string;
-
-  @IsValidLastName()
-  readonly lastName?: string;
+  @IsString()
+  @IsNotEmpty()
+  readonly name?: string;
 }
