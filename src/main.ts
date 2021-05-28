@@ -1,8 +1,8 @@
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
-import { AppModule } from './app.module';
 import { AppConfigService, FastifyService, SwaggerService } from './config';
+import { AppModule } from './app.module';
 
 const swaggerService = new SwaggerService();
 const fastifyService = new FastifyService();
@@ -21,6 +21,7 @@ const bootstrap = async () => {
       whitelist: true,
       transform: true,
       forbidUnknownValues: true,
+      forbidNonWhitelisted: true,
     }),
   );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));

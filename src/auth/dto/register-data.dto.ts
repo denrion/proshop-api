@@ -1,10 +1,8 @@
 import { LoginCredentialsDTO } from './login-credentials.dto';
-import { IsValidFirstName, IsValidLastName } from '../../shared';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class RegisterDataDTO extends LoginCredentialsDTO {
-  @IsValidFirstName()
-  readonly firstName?: string;
-
-  @IsValidLastName()
-  readonly lastName?: string;
+  @IsString()
+  @IsNotEmpty()
+  readonly name?: string;
 }
