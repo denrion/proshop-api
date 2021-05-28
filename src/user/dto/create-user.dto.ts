@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BaseCreateDTO, IsValidEmail, IsValidPassword } from '../../shared';
 
 export class CreateUserDTO extends BaseCreateDTO {
@@ -13,5 +13,6 @@ export class CreateUserDTO extends BaseCreateDTO {
   readonly name: string;
 
   @IsString()
+  @IsOptional()
   readonly role?: string;
 }

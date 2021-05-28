@@ -22,18 +22,30 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const reply = ctx.getResponse<FastifyReply>();
 
     // Add exceptions that need to be handled in a specific way here
-    switch (exception.code) {
+    switch (exception?.code || exception?.statusCode) {
+      case ExceptionCode.RATE_LIMIT_EXCEEDED_ERROR:
+        exception = this.handleRateLimitError(exception);
+        break;
       case ExceptionCode.UNIQUE_CONSTRAINT_VIOLATION:
         exception = this.handleUniqueConstraintViolation(exception);
         break;
       case ExceptionCode.MISSING_COLUMN_ERROR:
         exception = this.handleMissingColumnError(exception);
         break;
+
       default:
         break;
     }
 
     this.sendErrorResponse(exception, reply);
+  }
+
+  private handleRateLimitError(exception: any) {
+    return new BadRequestException({
+      message: exception.message,
+      error: 'Too Many Requests',
+      statusCode: exception.statusCode,
+    });
   }
 
   private handleUniqueConstraintViolation(exception: any) {

@@ -26,7 +26,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:newman": "node ./test/index.js",
     "seed": "node dist/config/database/seeder",
-    "seed:refresh": "node dist/config/database/ --refresh"
+    "seed:refresh": "node dist/config/database/seeder --refresh"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.15",
