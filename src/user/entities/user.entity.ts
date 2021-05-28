@@ -5,6 +5,7 @@ import { ApiHideProperty } from '@nestjs/swagger';
 import { AbstractEntity, UserRole } from '../../shared';
 import { ProductEntity } from '../../product/entities/product.entity';
 import { ReviewEntity } from '../../review/entities/review.entity';
+import { OrderEntity } from '../../order/entities/order.entity';
 
 @Entity('users')
 export class UserEntity extends AbstractEntity {
@@ -27,6 +28,9 @@ export class UserEntity extends AbstractEntity {
 
   @OneToMany(() => ReviewEntity, (review) => review.user)
   reviews: ReviewEntity[];
+
+  @OneToMany(() => OrderEntity, (order) => order.user)
+  orders: OrderEntity[];
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {

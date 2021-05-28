@@ -10,13 +10,15 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CreateReviewDTO } from './dto/create-review.dto';
-import { FindOneReviewParamsDTO } from './dto/find-one-review-params.dto';
-import { FindOneReviewQueryDTO } from './dto/find-one-review-query.dto';
-import { FindReviewsQueryDTO } from './dto/find-reviews-query.dto';
-import { UpdateReviewDTO } from './dto/update-review.dto';
 import { ReviewEntity } from './entities/review.entity';
 import { ReviewService } from './review.service';
+import {
+  FindOneReviewParamsDTO,
+  CreateReviewDTO,
+  FindReviewsQueryDTO,
+  FindOneReviewQueryDTO,
+  UpdateReviewDTO,
+} from './dto';
 import {
   ApiCreatedSuccessResponse,
   ApiPaginationResponse,
@@ -25,13 +27,10 @@ import {
   ApiOkSuccessResponse,
   DeleteResponseDTO,
   DeleteManyDTO,
-  UserRole,
 } from '../shared';
 import { buildPaginatedResponse } from '../shared/utils';
-import { Auth } from '../auth/decorators/auth.decorator';
 
 @ApiTags('Reviews')
-@Auth(UserRole.USER)
 @Controller('products/:productId/reviews')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
@@ -65,8 +64,7 @@ export class ReviewController {
     return buildPaginatedResponse({ page, limit, items, totalItems, reqUrl });
   }
 
-  @Auth(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Delete many Reviews' })
+  @ApiOperation({ summary: 'Delete many reviews' })
   @ApiOkSuccessResponse(DeleteResponseDTO)
   @Delete('/')
   async deleteMany(
@@ -78,7 +76,7 @@ export class ReviewController {
     return { deletedCount: affected };
   }
 
-  @ApiOperation({ summary: 'Find Review by id' })
+  @ApiOperation({ summary: 'Find review by id' })
   @ApiOkSuccessResponse(ReviewEntity)
   @Get('/:id')
   async findOne(
@@ -88,7 +86,7 @@ export class ReviewController {
     return this.reviewService.findOne(paramsDto, queryDto);
   }
 
-  @ApiOperation({ summary: 'Update Review by id' })
+  @ApiOperation({ summary: 'Update review by id' })
   @ApiOkSuccessResponse(ReviewEntity)
   @Put('/:id')
   async update(
@@ -98,7 +96,7 @@ export class ReviewController {
     return this.reviewService.update(paramsDto, updateDto);
   }
 
-  @ApiOperation({ summary: 'Delete Review by id' })
+  @ApiOperation({ summary: 'Delete review by id' })
   @ApiOkSuccessResponse(DeleteResponseDTO)
   @Delete('/:id')
   async deleteOne(

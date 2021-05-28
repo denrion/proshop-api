@@ -10,6 +10,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ProductService } from './product.service';
+import { ProductEntity } from './entities/product.entity';
 import {
   CreateProductDTO,
   FindProductsQueryDTO,
@@ -17,8 +19,6 @@ import {
   FindOneProductQueryDTO,
   UpdateProductDTO,
 } from './dto';
-import { ProductEntity } from './entities/product.entity';
-import { ProductService } from './product.service';
 import {
   ApiCreatedSuccessResponse,
   ApiPaginationResponse,
@@ -27,12 +27,9 @@ import {
   ApiOkSuccessResponse,
   DeleteResponseDTO,
   DeleteManyDTO,
-  UserRole,
 } from '../shared';
 import { buildPaginatedResponse } from '../shared/utils';
-import { Auth } from '../auth/decorators/auth.decorator';
 
-@Auth(UserRole.ADMIN)
 @ApiTags('Products')
 @Controller('products')
 export class ProductController {

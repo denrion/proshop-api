@@ -10,5 +10,8 @@ export class CreateUserDTO extends BaseCreateDTO {
 
   @IsString()
   @IsNotEmpty()
-  readonly name?: string;
+  readonly name: string;
+
+  @IsString()
+  readonly role?: string;
 }

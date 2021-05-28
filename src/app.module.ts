@@ -8,9 +8,18 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { ReviewModule } from './review/review.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
-  imports: [AppConfigModule, DBModule, AuthModule, UserModule, ProductModule, ReviewModule],
+  imports: [
+    AppConfigModule,
+    DBModule,
+    AuthModule,
+    UserModule,
+    ProductModule,
+    ReviewModule,
+    OrderModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
