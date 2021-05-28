@@ -1,5 +1,5 @@
 export * from './is-positive-int.decorator';
-export * from './is-decimal.decorator';
+export * from './is-positive-decimal.decorator';
 export * from './is-valid-id.decorator';
 export * from './is-valid-email.decorator';
 export * from './is-valid-first-name.decorator';
