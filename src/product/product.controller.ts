@@ -27,9 +27,12 @@ import {
   ApiOkSuccessResponse,
   DeleteResponseDTO,
   DeleteManyDTO,
+  UserRole,
 } from '../shared';
 import { buildPaginatedResponse } from '../shared/utils';
+import { Auth } from '../auth/decorators/auth.decorator';
 
+@Auth(UserRole.ADMIN)
 @ApiTags('Products')
 @Controller('products')
 export class ProductController {

@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Type } from 'class-transformer';
 import { AbstractEntity } from '../../shared';
 import { UserEntity } from '../../user/entities/user.entity';
+import { ReviewEntity } from '../../review/entities/review.entity';
 
 @Entity('products')
 export class ProductEntity extends AbstractEntity {
@@ -40,4 +41,7 @@ export class ProductEntity extends AbstractEntity {
   @ManyToOne(() => UserEntity, (user) => user.products)
   @JoinColumn({ name: 'fk_user_id' })
   user?: UserEntity;
+
+  @OneToMany(() => ReviewEntity, (review) => review.user)
+  reviews: ReviewEntity[];
 }

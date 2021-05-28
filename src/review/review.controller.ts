@@ -1,34 +1,110 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  ParseBoolPipe,
+  Put,
+  Query,
+} from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateReviewDTO } from './dto/create-review.dto';
+import { FindOneReviewParamsDTO } from './dto/find-one-review-params.dto';
+import { FindOneReviewQueryDTO } from './dto/find-one-review-query.dto';
+import { FindReviewsQueryDTO } from './dto/find-reviews-query.dto';
+import { UpdateReviewDTO } from './dto/update-review.dto';
+import { ReviewEntity } from './entities/review.entity';
 import { ReviewService } from './review.service';
-import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
+import {
+  ApiCreatedSuccessResponse,
+  ApiPaginationResponse,
+  RequestUrl,
+  PaginatedResponseDTO,
+  ApiOkSuccessResponse,
+  DeleteResponseDTO,
+  DeleteManyDTO,
+  UserRole,
+} from '../shared';
+import { buildPaginatedResponse } from '../shared/utils';
+import { Auth } from '../auth/decorators/auth.decorator';
 
-@Controller('review')
+@ApiTags('Reviews')
+@Auth(UserRole.USER)
+@Controller('products/:productId/reviews')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
-  @Post()
-  create(@Body() createReviewDto: CreateReviewDto) {
-    return this.reviewService.create(createReviewDto);
+  @ApiOperation({ summary: 'Create a new review' })
+  @ApiCreatedSuccessResponse(ReviewEntity)
+  @Post('/')
+  async create(
+    @Param() paramsDto: FindOneReviewParamsDTO,
+    @Body() createDto: CreateReviewDTO,
+  ): Promise<ReviewEntity> {
+    createDto.fkProductId = paramsDto.productId;
+
+    return this.reviewService.create(createDto);
   }
 
-  @Get()
-  findAll() {
-    return this.reviewService.findAll();
+  @ApiOperation({ summary: 'Get Reviews' })
+  @ApiPaginationResponse(ReviewEntity)
+  @Get('/')
+  async findAll(
+    @Param() paramsDto: FindOneReviewParamsDTO,
+    @Query() queryDto: FindReviewsQueryDTO,
+    @RequestUrl() reqUrl: string,
+  ): Promise<PaginatedResponseDTO<ReviewEntity>> {
+    queryDto.fkProductId = paramsDto.productId;
+
+    const { page, limit } = queryDto;
+
+    const [items, totalItems] = await this.reviewService.findAll(queryDto);
+
+    return buildPaginatedResponse({ page, limit, items, totalItems, reqUrl });
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reviewService.findOne(+id);
+  @Auth(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Delete many Reviews' })
+  @ApiOkSuccessResponse(DeleteResponseDTO)
+  @Delete('/')
+  async deleteMany(
+    @Body() deleteDto: DeleteManyDTO,
+    @Query('hardDelete', ParseBoolPipe) hardDelete?: boolean,
+  ): Promise<DeleteResponseDTO> {
+    const { affected } = await this.reviewService.deleteMany(deleteDto, hardDelete);
+
+    return { deletedCount: affected };
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
-    return this.reviewService.update(+id, updateReviewDto);
+  @ApiOperation({ summary: 'Find Review by id' })
+  @ApiOkSuccessResponse(ReviewEntity)
+  @Get('/:id')
+  async findOne(
+    @Param() paramsDto: FindOneReviewParamsDTO,
+    @Query() queryDto: FindOneReviewQueryDTO,
+  ): Promise<ReviewEntity> {
+    return this.reviewService.findOne(paramsDto, queryDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reviewService.remove(+id);
+  @ApiOperation({ summary: 'Update Review by id' })
+  @ApiOkSuccessResponse(ReviewEntity)
+  @Put('/:id')
+  async update(
+    @Param() paramsDto: FindOneReviewParamsDTO,
+    @Body() updateDto: UpdateReviewDTO,
+  ): Promise<ReviewEntity> {
+    return this.reviewService.update(paramsDto, updateDto);
+  }
+
+  @ApiOperation({ summary: 'Delete Review by id' })
+  @ApiOkSuccessResponse(DeleteResponseDTO)
+  @Delete('/:id')
+  async deleteOne(
+    @Param() paramsDto: FindOneReviewParamsDTO,
+    @Query('hardDelete', ParseBoolPipe) hardDelete?: boolean,
+  ): Promise<null> {
+    return this.reviewService.deleteOne(paramsDto, hardDelete);
   }
 }

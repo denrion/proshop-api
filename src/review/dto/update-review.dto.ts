@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateReviewDto } from './create-review.dto';
+import { IntersectionType, PartialType } from '@nestjs/swagger';
+import { CreateReviewDTO } from './create-review.dto';
+import { BaseUpdateDTO } from '../../shared';
 
-export class UpdateReviewDto extends PartialType(CreateReviewDto) {}
+export class UpdateReviewDTO extends IntersectionType(
+  BaseUpdateDTO,
+  PartialType(CreateReviewDTO),
+) {}

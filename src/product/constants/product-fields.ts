@@ -3,7 +3,7 @@ import { ProductEntity } from '../entities/product.entity';
 type ProductFields = (keyof ProductEntity)[] | string[];
 
 export const PRODUCT_ALLOWED_SEARCH_FIELDS: ProductFields = ['id', 'name', 'description', 'brand'];
-export const PRODUCT_ALLOWED_RELATIONS: ProductFields = [];
+export const PRODUCT_ALLOWED_RELATIONS: ProductFields = ['reviews', 'user'];
 
 const commonFields: ProductFields = [
   ...PRODUCT_ALLOWED_SEARCH_FIELDS,
