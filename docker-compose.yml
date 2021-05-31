@@ -3,6 +3,7 @@ services:
   postgres:
     container_name: ${DB_CONTAINER_NAME}
     image: postgres:13.2-alpine
+    user: ${UID}:${GID}
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -17,6 +18,7 @@ services:
   dev:
     container_name: ${APP_CONTAINER_DEV_NAME}
     image: proshop-api-dev:1.0.0
+    user: ${UID}:${GID}
     build:
       context: .
       target: development
